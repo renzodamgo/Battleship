@@ -4,7 +4,7 @@ import java.util.Scanner;
 public class Main {
     static int[][] mat = new int[10][10];
     static String[] ships = {"Aircraft Carrier", "Battleship", "Submarine", "Cruiser", "Destroyer"};
-    static int[] shipLengths = {5, 4, 3, 3, 2};
+    static Integer[] shipLengths = {5, 4, 3, 3, 2};
     static Scanner sc = new Scanner(System.in);
 
     public static void main(String[] args) {
@@ -34,9 +34,9 @@ public class Main {
     public static void placeShip(String shipName, int shipLength) {
         int[] coord1, coord2;
         do {
-            String coords = sc.nextLine();
-            coord1 = getCoord(coords.substring(0, 2));
-            coord2 = getCoord(coords.substring(3, 5));
+            String[] coords = sc.nextLine().split("\\s+");
+            coord1 = getCoord(coords[0]);
+            coord2 = getCoord(coords[1]);
         } while (!checkCoords(coord1, coord2, shipLength));
     }
 
@@ -50,7 +50,7 @@ public class Main {
     public static boolean checkCoords(int[] coord1, int[] coord2, int shipLength) {
         if (coord1[0] == coord2[0] ) {
             if (Math.abs(coord1[1] - coord2[1]) + 1 != shipLength) {
-                System.out.println("Error! Wrong length of the " + ships[Arrays.asList(shipLengths).indexOf(shipLength)] + "! Try again:");
+                System.out.println("Error! Wrong length  " + ships[Arrays.asList(shipLengths).indexOf(shipLength)] + "! Try again:");
                 return false;
             }
             return true;
