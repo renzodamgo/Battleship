@@ -16,7 +16,7 @@ public class Main {
             printMat();
         }
         System.out.println("The game starts!");
-        printMat();
+        printEmptyMat();
         shoot();
 
     }
@@ -24,7 +24,7 @@ public class Main {
     public static void shoot() {
         boolean shoot = true;
         do {
-            try{
+            try {
                 System.out.println("Take a shoot!");
                 String coord = sc.nextLine();
                 int[] shotCoord = getCoord(coord);
@@ -32,13 +32,15 @@ public class Main {
                 switch (mat[shotCoord[0]][shotCoord[1]]) {
                     case 0 -> {
                         mat[shotCoord[0]][shotCoord[1]] = 3;
-                        printMat();
+                        printFogMat(shotCoord);
                         System.out.println("You missed!");
+                        printMat();
                     }
                     case 1 -> {
                         mat[shotCoord[0]][shotCoord[1]] = 2;
-                        printMat();
+                        printFogMat(shotCoord);
                         System.out.println("You hit a ship!");
+                        printMat();
                     }
                     case 2, 3 -> {
                         printMat();
@@ -46,7 +48,7 @@ public class Main {
                     }
                 }
                 shoot = false;
-            } catch (Exception e){
+            } catch (Exception e) {
                 System.out.println("Coordinate index out of the map. Try new coordinate");
             }
 
@@ -70,6 +72,38 @@ public class Main {
             System.out.println();
         }
     }
+
+    public static void printEmptyMat() {
+        System.out.println("  1 2 3 4 5 6 7 8 9 10");
+        int ascii = 65;
+        for (int[] row : mat) {
+            System.out.print((char) ascii++);
+            for (int ignored : row) {
+                System.out.print(" ~");
+            }
+        }
+        System.out.println();
+    }
+
+    public static void printFogMat(int[] coord) {
+        System.out.println("  1 2 3 4 5 6 7 8 9 10");
+        int ascii = 65;
+        for (int nRow = 0; nRow < 9; nRow++) {
+            System.out.print((char) ascii++);
+            for (int nCol = 0; nCol < 9; nCol++) {
+                if (coord[0] == nRow && coord[1] == nCol) {
+                    switch (mat[nRow][nCol]) {
+                        case 2 -> System.out.print(" X");
+                        case 3 -> System.out.print(" M");
+                    }
+                } else {
+                    System.out.print(" ~");
+                }
+            }
+            System.out.println();
+        }
+    }
+
 
     public static void placeShip(int shipLength) {
         int[] coord1, coord2;
