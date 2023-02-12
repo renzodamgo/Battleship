@@ -22,26 +22,36 @@ public class Main {
     }
 
     public static void shoot() {
-        System.out.println("Take a shoot!");
-        String coord = sc.nextLine();
-        int[] shotCoord = getCoord(coord);
+        boolean shoot = true;
+        do {
+            try{
+                System.out.println("Take a shoot!");
+                String coord = sc.nextLine();
+                int[] shotCoord = getCoord(coord);
 
-        switch (mat[shotCoord[0]][shotCoord[1]]) {
-            case 0 -> {
-                mat[shotCoord[0]][shotCoord[1]] = 3;
-                printMat();
-                System.out.println("You missed!");
+                switch (mat[shotCoord[0]][shotCoord[1]]) {
+                    case 0 -> {
+                        mat[shotCoord[0]][shotCoord[1]] = 3;
+                        printMat();
+                        System.out.println("You missed!");
+                    }
+                    case 1 -> {
+                        mat[shotCoord[0]][shotCoord[1]] = 2;
+                        printMat();
+                        System.out.println("You hit a ship!");
+                    }
+                    case 2, 3 -> {
+                        printMat();
+                        System.out.println("You already shoot there!");
+                    }
+                }
+                shoot = false;
+            } catch (Exception e){
+                System.out.println("Coordinate index out of the map. Try new coordinate");
             }
-            case 1 -> {
-                mat[shotCoord[0]][shotCoord[1]] = 2;
-                printMat();
-                System.out.println("You hit a ship!");
-            }
-            case 2, 3 -> {
-                printMat();
-                System.out.println("You already shoot there!");
-            }
-        }
+
+        } while (shoot);
+
     }
 
     public static void printMat() {
@@ -54,7 +64,7 @@ public class Main {
                     case 0 -> System.out.print(" ~");
                     case 1 -> System.out.print(" O");
                     case 2 -> System.out.print(" X");
-                    case 3 -> System.out.println(" M");
+                    case 3 -> System.out.print(" M");
                 }
             }
             System.out.println();
