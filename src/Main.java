@@ -81,8 +81,8 @@ public class Main {
             for (int ignored : row) {
                 System.out.print(" ~");
             }
+            System.out.println();
         }
-        System.out.println();
     }
 
     public static void printFogMat(int[] coord) {
