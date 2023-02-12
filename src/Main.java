@@ -1,3 +1,4 @@
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Scanner;
 
@@ -51,6 +52,20 @@ public class Main {
         }
     }
 
+
+    public static ArrayList<Integer[]> getTouchArea(int[] coord) {
+        ArrayList<Integer[]> touchArea = new ArrayList<>();
+        for (int i = -1; i <= 1; i++) {
+            for (int j = -1; j <= 1; j++) {
+                if (coord[0] + i >= 0 && coord[1] + j >= 0 && coord[0] + i <= 9 && coord[1] + j <= 9) {
+                    Integer[] coordArea = {coord[0] + i, coord[1] + j};
+                    touchArea.add(coordArea);
+                }
+            }
+        }
+        return touchArea;
+    }
+
     public static boolean checkShip(int[] coord1, int[] coord2) {
         if (coord1[0] == coord2[0]) {
             for (int i = Math.min(coord1[1], coord2[1]); i <= Math.max(coord1[1], coord2[1]); i++) {
@@ -58,12 +73,26 @@ public class Main {
                     System.out.println("Error! Cannot place a ship in another");
                     return false;
                 }
+                ArrayList<Integer[]> touchArea = getTouchArea(new int[]{coord1[0], i});
+                for (Integer[] coord : touchArea) {
+                    if (mat[coord[0]][coord[1]] == 1) {
+                        System.out.println("Error! Cannot place a ship close to another");
+                        return false;
+                    }
+                }
             }
         } else {
             for (int i = Math.min(coord1[0], coord2[0]); i <= Math.max(coord1[0], coord2[0]); i++) {
                 if (mat[i][coord1[1]] == 1) {
                     System.out.println("Error! Cannot place a ship in another");
                     return false;
+                }
+                ArrayList<Integer[]> touchArea = getTouchArea(new int[]{i, coord1[1]});
+                for (Integer[] coord : touchArea) {
+                    if (mat[coord[0]][coord[1]] == 1) {
+                        System.out.println("Error! Cannot place a ship close to another");
+                        return false;
+                    }
                 }
             }
         }
