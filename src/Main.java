@@ -15,6 +15,33 @@ public class Main {
             placeShip(shipLengths[Arrays.asList(ships).indexOf(ship)]);
             printMat();
         }
+        System.out.println("The game starts!");
+        printMat();
+        shoot();
+
+    }
+
+    public static void shoot() {
+        System.out.println("Take a shoot!");
+        String coord = sc.nextLine();
+        int[] shotCoord = getCoord(coord);
+
+        switch (mat[shotCoord[0]][shotCoord[1]]) {
+            case 0 -> {
+                mat[shotCoord[0]][shotCoord[1]] = 3;
+                printMat();
+                System.out.println("You missed!");
+            }
+            case 1 -> {
+                mat[shotCoord[0]][shotCoord[1]] = 2;
+                printMat();
+                System.out.println("You hit a ship!");
+            }
+            case 2, 3 -> {
+                printMat();
+                System.out.println("You already shoot there!");
+            }
+        }
     }
 
     public static void printMat() {
@@ -27,6 +54,7 @@ public class Main {
                     case 0 -> System.out.print(" ~");
                     case 1 -> System.out.print(" O");
                     case 2 -> System.out.print(" X");
+                    case 3 -> System.out.println(" M");
                 }
             }
             System.out.println();
