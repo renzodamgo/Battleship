@@ -88,9 +88,9 @@ public class Main {
     public static void printFogMat(int[] coord) {
         System.out.println("  1 2 3 4 5 6 7 8 9 10");
         int ascii = 65;
-        for (int nRow = 0; nRow < 9; nRow++) {
+        for (int nRow = 0; nRow <= 9; nRow++) {
             System.out.print((char) ascii++);
-            for (int nCol = 0; nCol < 9; nCol++) {
+            for (int nCol = 0; nCol <= 9; nCol++) {
                 if (coord[0] == nRow && coord[1] == nCol) {
                     switch (mat[nRow][nCol]) {
                         case 2 -> System.out.print(" X");
