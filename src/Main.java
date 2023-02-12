@@ -8,10 +8,11 @@ public class Main {
     static Scanner sc = new Scanner(System.in);
 
     public static void main(String[] args) {
+        printMat();
         for (String ship : ships) {
-            printMat();
             System.out.println("Enter the coordinates of the " + ship + " (" + shipLengths[Arrays.asList(ships).indexOf(ship)] + " cells):");
-            placeShip(ship, shipLengths[Arrays.asList(ships).indexOf(ship)]);
+            placeShip(shipLengths[Arrays.asList(ships).indexOf(ship)]);
+            printMat();
         }
     }
 
@@ -23,21 +24,50 @@ public class Main {
             for (int e : row) {
                 switch (e) {
                     case 0 -> System.out.print(" ~");
-                    case 1 -> System.out.print(" X");
-                    case 2 -> System.out.print(" O");
+                    case 1 -> System.out.print(" O");
+                    case 2 -> System.out.print(" X");
                 }
             }
             System.out.println();
         }
     }
 
-    public static void placeShip(String shipName, int shipLength) {
+    public static void placeShip(int shipLength) {
         int[] coord1, coord2;
         do {
             String[] coords = sc.nextLine().split("\\s+");
             coord1 = getCoord(coords[0]);
             coord2 = getCoord(coords[1]);
-        } while (!checkCoords(coord1, coord2, shipLength));
+        } while (!checkCoords(coord1, coord2, shipLength) || !checkShip(coord1, coord2));
+
+        if (coord1[0] == coord2[0]) {
+            for (int i = Math.min(coord1[1], coord2[1]); i <= Math.max(coord1[1], coord2[1]); i++) {
+                mat[coord1[0]][i] = 1;
+            }
+        } else {
+            for (int i = Math.min(coord1[0], coord2[0]); i <= Math.max(coord1[0], coord2[0]); i++) {
+                mat[i][coord1[1]] = 1;
+            }
+        }
+    }
+
+    public static boolean checkShip(int[] coord1, int[] coord2) {
+        if (coord1[0] == coord2[0]) {
+            for (int i = Math.min(coord1[1], coord2[1]); i <= Math.max(coord1[1], coord2[1]); i++) {
+                if (mat[coord1[0]][i] == 1) {
+                    System.out.println("Error! Cannot place a ship in another");
+                    return false;
+                }
+            }
+        } else {
+            for (int i = Math.min(coord1[0], coord2[0]); i <= Math.max(coord1[0], coord2[0]); i++) {
+                if (mat[i][coord1[1]] == 1) {
+                    System.out.println("Error! Cannot place a ship in another");
+                    return false;
+                }
+            }
+        }
+        return true;
     }
 
     public static int[] getCoord(String coord) {
@@ -48,13 +78,13 @@ public class Main {
     }
 
     public static boolean checkCoords(int[] coord1, int[] coord2, int shipLength) {
-        if (coord1[0] == coord2[0] ) {
+        if (coord1[0] == coord2[0]) {
             if (Math.abs(coord1[1] - coord2[1]) + 1 != shipLength) {
-                System.out.println("Error! Wrong length  " + ships[Arrays.asList(shipLengths).indexOf(shipLength)] + "! Try again:");
+                System.out.println("Error! Wrong length of the  " + ships[Arrays.asList(shipLengths).indexOf(shipLength)] + "! Try again:");
                 return false;
             }
             return true;
-        }  else if  (coord1[1] == coord2[1]) {
+        } else if (coord1[1] == coord2[1]) {
             if (Math.abs(coord1[0] - coord2[0]) + 1 != shipLength) {
                 System.out.println("Error! Wrong length of the " + ships[Arrays.asList(shipLengths).indexOf(shipLength)] + "! Try again:");
                 return false;
