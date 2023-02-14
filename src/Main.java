@@ -85,19 +85,16 @@ public class Main {
         }
     }
 
-    public static void printFogMat(int[] coord) {
+    public static void printFogMat() {
         System.out.println("  1 2 3 4 5 6 7 8 9 10");
         int ascii = 65;
-        for (int nRow = 0; nRow <= 9; nRow++) {
+        for (int[] row : mat) {
             System.out.print((char) ascii++);
-            for (int nCol = 0; nCol <= 9; nCol++) {
-                if (coord[0] == nRow && coord[1] == nCol) {
-                    switch (mat[nRow][nCol]) {
-                        case 2 -> System.out.print(" X");
-                        case 3 -> System.out.print(" M");
-                    }
-                } else {
-                    System.out.print(" ~");
+            for (int e : row) {
+                switch (e) {
+                    case 2 -> System.out.print(" X");
+                    case 3 -> System.out.print(" M");
+                    default -> System.out.print(" ~");
                 }
             }
             System.out.println();
