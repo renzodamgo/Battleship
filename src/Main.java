@@ -17,7 +17,11 @@ public class Main {
         }
         System.out.println("The game starts!");
         printEmptyMat();
-        shoot();
+        do{
+            shoot();
+        } while (!isGameEnd());
+        System.out.println("You sank the last ship. You won. Congratulations!");
+
 
     }
 
@@ -34,16 +38,14 @@ public class Main {
                         mat[shotCoord[0]][shotCoord[1]] = 3;
                         printFogMat(shotCoord);
                         System.out.println("You missed!");
-                        printMat();
                     }
                     case 1 -> {
                         mat[shotCoord[0]][shotCoord[1]] = 2;
-                        printFogMat(shotCoord);
+                        printFogMat();
                         System.out.println("You hit a ship!");
-                        printMat();
                     }
                     case 2, 3 -> {
-                        printMat();
+                        printFogMat();
                         System.out.println("You already shoot there!");
                     }
                 }
@@ -99,6 +101,17 @@ public class Main {
             }
             System.out.println();
         }
+    }
+
+    public static boolean isGameEnd(){
+        for (int[] row : mat) {
+            for (int e : row) {
+                if (e == 1){
+                    return false;
+                }
+            }
+        }
+        return true;
     }
 
 
