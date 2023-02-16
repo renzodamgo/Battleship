@@ -10,6 +10,8 @@ public class Main {
     static String[] ships = {"Aircraft Carrier", "Battleship", "Submarine", "Cruiser", "Destroyer"};
     static Integer[] shipLengths = {5, 4, 3, 3, 2};
     static Scanner sc = new Scanner(System.in);
+    static Integer[] arrIndex = {1, 2, 3, 4, 5};
+
 
     public static void main(String[] args) {
         for (int i = 0; i < 2; i++) {
@@ -19,7 +21,7 @@ public class Main {
             for (String ship : ships) {
                 System.out.println("Enter the coordinates of the " + ship + " (" + shipLengths[Arrays.asList(ships).indexOf(ship)] + " cells):");
                 System.out.println();
-                placeShip(mats[i], shipLengths[Arrays.asList(ships).indexOf(ship)]);
+                placeShip(mats[i], shipLengths[Arrays.asList(ships).indexOf(ship)], Arrays.asList(ships).indexOf(ship) + 1);
                 System.out.println();
                 printMat(mats[i]);
             }
@@ -44,6 +46,17 @@ public class Main {
 
     }
 
+    public static boolean isShipSunk(int[][] mat, int index) {
+        for (int[] row : mat) {
+            for (int e : row) {
+                if (e == index) {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+
     public static void shoot(int[][] mat) {
         boolean shoot = true;
         do {
@@ -54,16 +67,20 @@ public class Main {
 
                 switch (mat[shotCoord[0]][shotCoord[1]]) {
                     case 0 -> {
-                        mat[shotCoord[0]][shotCoord[1]] = 3;
+                        mat[shotCoord[0]][shotCoord[1]] = 7;
                         System.out.println("You missed!");
                     }
-                    case 1 -> {
-                        mat[shotCoord[0]][shotCoord[1]] = 2;
-                        System.out.println("You hit a ship!");
+                    case 1, 2, 3, 4, 5 -> {
+                        int index = mat[shotCoord[0]][shotCoord[1]];
+                        mat[shotCoord[0]][shotCoord[1]] = 6;
+                        if (isShipSunk(mat, index)) {
+                            System.out.println("You sank a ship!");
+                        } else {
+                            System.out.println("You hit a ship!");
+                        }
                     }
-                    case 2, 3 -> {
-                        System.out.println("You already shoot there!");
-                    }
+                    case 6, 7 -> System.out.println("You already shoot there!");
+
                 }
                 shoot = false;
             } catch (Exception e) {
@@ -88,9 +105,9 @@ public class Main {
             for (int e : row) {
                 switch (e) {
                     case 0 -> System.out.print(" ~");
-                    case 1 -> System.out.print(" O");
-                    case 2, 4 -> System.out.print(" X");
-                    case 3 -> System.out.print(" M");
+                    case 1, 2, 3, 4, 5 -> System.out.print(" O");
+                    case 6 -> System.out.print(" X");
+                    case 7 -> System.out.print(" M");
                 }
             }
             System.out.println();
@@ -105,8 +122,8 @@ public class Main {
             System.out.print((char) ascii++);
             for (int e : row) {
                 switch (e) {
-                    case 2 -> System.out.print(" X");
-                    case 3 -> System.out.print(" M");
+                    case 6 -> System.out.print(" X");
+                    case 7 -> System.out.print(" M");
                     default -> System.out.print(" ~");
                 }
             }
@@ -117,7 +134,7 @@ public class Main {
     public static boolean isGameEnd(int[][] mat) {
         for (int[] row : mat) {
             for (int e : row) {
-                if (e == 1) {
+                if (Arrays.asList(arrIndex).contains(e)) {
                     return false;
                 }
             }
@@ -126,7 +143,7 @@ public class Main {
     }
 
 
-    public static void placeShip(int[][] mat, int shipLength) {
+    public static void placeShip(int[][] mat, int shipLength, int shipIndex) {
         int[] coord1, coord2;
         do {
             String[] coords = sc.nextLine().split("\\s+");
@@ -136,11 +153,11 @@ public class Main {
 
         if (coord1[0] == coord2[0]) {
             for (int i = Math.min(coord1[1], coord2[1]); i <= Math.max(coord1[1], coord2[1]); i++) {
-                mat[coord1[0]][i] = 1;
+                mat[coord1[0]][i] = shipIndex;
             }
         } else {
             for (int i = Math.min(coord1[0], coord2[0]); i <= Math.max(coord1[0], coord2[0]); i++) {
-                mat[i][coord1[1]] = 1;
+                mat[i][coord1[1]] = shipIndex;
             }
         }
     }
@@ -162,13 +179,13 @@ public class Main {
     public static boolean checkShip(int[][] mat, int[] coord1, int[] coord2) {
         if (coord1[0] == coord2[0]) {
             for (int i = Math.min(coord1[1], coord2[1]); i <= Math.max(coord1[1], coord2[1]); i++) {
-                if (mat[coord1[0]][i] == 1) {
+                if (Arrays.asList(arrIndex).contains(mat[coord1[0]][i])) {
                     System.out.println("Error! Cannot place a ship in another");
                     return false;
                 }
                 ArrayList<Integer[]> touchArea = getTouchArea(new int[]{coord1[0], i});
                 for (Integer[] coord : touchArea) {
-                    if (mat[coord[0]][coord[1]] == 1) {
+                    if (Arrays.asList(arrIndex).contains(mat[coord[0]][coord[1]])) {
                         System.out.println("Error! Cannot place a ship close to another");
                         return false;
                     }
@@ -176,13 +193,13 @@ public class Main {
             }
         } else {
             for (int i = Math.min(coord1[0], coord2[0]); i <= Math.max(coord1[0], coord2[0]); i++) {
-                if (mat[i][coord1[1]] == 1) {
+                if (Arrays.asList(arrIndex).contains(mat[i][coord1[1]])) {
                     System.out.println("Error! Cannot place a ship in another");
                     return false;
                 }
                 ArrayList<Integer[]> touchArea = getTouchArea(new int[]{i, coord1[1]});
                 for (Integer[] coord : touchArea) {
-                    if (mat[coord[0]][coord[1]] == 1) {
+                    if (Arrays.asList(arrIndex).contains(mat[coord[0]][coord[1]])) {
                         System.out.println("Error! Cannot place a ship close to another");
                         return false;
                     }
